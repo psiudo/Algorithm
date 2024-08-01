@@ -1,22 +1,17 @@
-#include <vector>
+#include <string>
 #include <algorithm>
+
 using namespace std;
 
 long long solution(long long n) {
+    // 숫자를 문자열로 변환
+    string str = to_string(n);
     
-    vector<int> digits;
+    // 문자열을 내림차순으로 정렬
+    sort(str.begin(), str.end(), greater<char>());
     
-    while(n > 0){
-        digits.push_back(n % 10);
-        n/=10;
-    }
+    // 정렬된 문자열을 다시 정수로 변환
+    long long answer = stoll(str);
     
-    sort(digits.begin(), digits.end(), greater<int>());
-    
-    long long answer = 0;
-    
-    for(int digit : digits){
-        answer = answer*10 + digit;
-    }
     return answer;
 }
