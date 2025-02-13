@@ -1,8 +1,11 @@
-K = int(input())
+import sys
+
+
+K = int(sys.stdin.readline())
 stack_list = []
 
 for i in range(K) :
-    num = int(input())
+    num = int(sys.stdin.readline())
     if num == 0 :
         stack_list.pop()
     else :
