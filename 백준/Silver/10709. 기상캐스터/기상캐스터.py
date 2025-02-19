@@ -1,28 +1,22 @@
-
 H, W = map(int, input().split())
 sky = []
-for _ in range(H) :
-    sky.append(input()) # sky는 문자열
-
-answer = [[-1]* W for _ in range(H)]
 
 for i in range(H) :
-    for j in range(W) :
+    line = input()
+    temp = []
+    for j in line :
+        if j == 'c' :
+            temp.append(0)
+        else :
+            temp.append(-1)
+    sky.append(temp)
 
-        if sky[i][j] == 'c' :
-            answer[i][j] = 0
+for p in range(H) :
+    for q in range(1, W) :
+        if sky[p][q] == 0 :
+            continue
+        if sky[p][q-1] != -1 :
+            sky[p][q] = sky[p][q-1] + 1
 
-            k = 1
-            dist = 1
-            while j + k <= W-1 :
-                if sky[i][j+k] == '.' :
-                    answer[i][j + k] = dist
-                    dist += 1
-                elif sky[i][j+k] == 'c' :
-                    break
-                k += 1
-
-for q in range(H) :
-    print(*answer[q])
-
-
+for k in range(H) :
+    print(*sky[k])
