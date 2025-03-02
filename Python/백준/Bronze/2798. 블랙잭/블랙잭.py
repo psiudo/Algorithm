@@ -1,15 +1,21 @@
 N, M = map(int, input().split())
-card = list(map(int, input().split()))
-select = [0]*3
-black_jack = -100
-for i in range(N-2) :
-    select[0] = card[i]
-    for j in range(i+1, N-1) :
-        select[1] = card[j]
-        for k in range(j+1, N) :
-            select[2] = card[k]
-            temp = sum(select)
-            if temp <= M and temp > black_jack :
-                black_jack = temp
+cards = list(map(int, input().split()))
+cards.sort()
+best = 0
 
-print(black_jack) 
+for i in range(N - 2):
+    j, k = i + 1, N - 1
+    while j < k:
+        total = cards[i] + cards[j] + cards[k]
+        if total > M:
+            # 총합이 목표보다 크면, k를 줄여서 합을 감소시킴
+            k -= 1
+        else:
+            # 총합이 목표 이하면, 현재 합이 최적이면 갱신하고, j를 증가시켜 더 큰 합을 시도
+            best = max(best, total)
+            if best == M:  # 최적해를 찾았으면 바로 종료
+                print(best)
+                exit()
+            j += 1
+
+print(best)
