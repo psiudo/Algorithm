@@ -5,9 +5,9 @@ def decomp(t, sum):
 
 n = int(input())
 
-for i in range(1, n):
+for i in range(max(1, n - 9 * len(str(n))), n):  
     if decomp(i, i) == n:
         print(i)
         break
 else:
-    print(0) 
+    print(0)
