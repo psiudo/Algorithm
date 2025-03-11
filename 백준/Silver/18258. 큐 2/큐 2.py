@@ -1,59 +1,59 @@
 import sys
 
-class StackQueue:
-    def __init__(self):
-        self.in_stack = []
-        self.out_stack = []
+class CircularQueue:
+    def __init__(self, capacity=2000001):
+        self.queue = [0] * capacity
+        self.capacity = capacity
+        self.f = 0
+        self.r = 0
+        self.count = 0
 
     def push(self, x):
-        self.in_stack.append(x)
+        if self.count == self.capacity - 1:
+            return
+        self.queue[self.r] = x
+        self.r = (self.r + 1) % self.capacity
+        self.count += 1
 
     def pop(self):
-        if not self.out_stack:
-            while self.in_stack:
-                self.out_stack.append(self.in_stack.pop())
-        return str(self.out_stack.pop()) if self.out_stack else "-1"
+        if self.count == 0:
+            return "-1"
+        val = self.queue[self.f]
+        self.f = (self.f + 1) % self.capacity
+        self.count -= 1
+        return str(val)
 
     def size(self):
-        return str(len(self.in_stack) + len(self.out_stack))
+        return str(self.count)
 
     def empty(self):
-        return "1" if not (self.in_stack or self.out_stack) else "0"
+        return "1" if self.count == 0 else "0"
 
     def front(self):
-        if self.out_stack:
-            return str(self.out_stack[-1])
-        elif self.in_stack:
-            return str(self.in_stack[0])
-        return "-1"
+        return str(self.queue[self.f]) if self.count > 0 else "-1"
 
     def back(self):
-        if self.in_stack:
-            return str(self.in_stack[-1])
-        elif self.out_stack:
-            return str(self.out_stack[0])
-        return "-1"
+        return str(self.queue[(self.r - 1) % self.capacity]) if self.count > 0 else "-1"
 
-input = sys.stdin.readline
-output = sys.stdout.write
+def process_queue():
+    queue = CircularQueue()
+    output = []
+    n = int(sys.stdin.readline().strip())
+    for _ in range(n):
+        command = sys.stdin.readline().strip().split()
+        op = command[0]
+        if op == "push":
+            queue.push(int(command[1]))
+        elif op == "pop":
+            output.append(queue.pop())
+        elif op == "size":
+            output.append(queue.size())
+        elif op == "empty":
+            output.append(queue.empty())
+        elif op == "front":
+            output.append(queue.front())
+        elif op == "back":
+            output.append(queue.back())
+    sys.stdout.write("\n".join(output) + "\n")
 
-N = int(input().strip())
-queue = StackQueue()
-result = []
-
-for _ in range(N):
-    cmd = input().strip().split()
-    if cmd[0] == "push":
-        queue.push(int(cmd[1]))
-    elif cmd[0] == "pop":
-        result.append(queue.pop() + "\n")
-    elif cmd[0] == "size":
-        result.append(queue.size() + "\n")
-    elif cmd[0] == "empty":
-        result.append(queue.empty() + "\n")
-    elif cmd[0] == "front":
-        result.append(queue.front() + "\n")
-    elif cmd[0] == "back":
-        result.append(queue.back() + "\n")
-
-output("".join(result))
+process_queue()
