@@ -1,23 +1,30 @@
-def dfs(x, y):
-    if x < 0 or x >= N or y < 0 or y >= N or grid[x][y] == 0:
-        return 0
+def dfs_stack(x, y):
+    stack = [(x, y)]
+    count = 0
 
-    grid[x][y] = 0
-    count = 1
+    while stack:
+        x, y = stack.pop()
+        if grid[x][y] == 0:
+            continue
 
-    for dx, dy in [(1, 0), (0, 1), (-1, 0), (0, -1)]:
-        count += dfs(x + dx, y + dy)
+        grid[x][y] = 0
+        count += 1
+
+        for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+            nx, ny = x + dx, y + dy
+            if 0 <= nx < N and 0 <= ny < N and grid[nx][ny] == 1:
+                stack.append((nx, ny))
 
     return count
 
 N = int(input())
-grid = [list(map(int, list(input()))) for _ in range(N)]
+grid = [list(map(int, input().strip())) for _ in range(N)]
 result = []
 
 for i in range(N):
     for j in range(N):
         if grid[i][j] == 1:
-            result.append(dfs(i, j))
+            result.append(dfs_stack(i, j))
 
 print(len(result))
 for count in sorted(result):
