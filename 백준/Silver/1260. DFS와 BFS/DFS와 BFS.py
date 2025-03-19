@@ -1,5 +1,7 @@
 import sys
 from collections import deque
+input =sys.stdin.readline
+
 
 def dfs(cur) :
     for neighbor in graph[cur] :
@@ -29,13 +31,10 @@ for _ in range(M) :
 for i in range(1, N + 1):
     graph[i].sort()
 
-VisitedOrder = []
 VisitedOrder = [V]
 dfs(V)
 print(" ".join(map(str, VisitedOrder)))
 
-
-VisitedOrder = []
 VisitedOrder = [V]
 bfs(V)
 print(" ".join(map(str, VisitedOrder)))
