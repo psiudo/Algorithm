@@ -1,35 +1,41 @@
 from collections import deque
 import sys
-input = sys.stdin.readline
 
-N, M = map(int, input().split())
-maze = [list(map(int, input().strip())) for _ in range(N)]
+def min_steps_in_maze(N, M, maze):
+    # 방향 벡터 (상, 하, 좌, 우)
+    dx = [-1, 1, 0, 0]
+    dy = [0, 0, -1, 1]
 
-# 32비트씩 나누어 비트마스크 관리
-visited = [0] * ((N * M // 32) + 1)
-
-def set_visited(x, y):
-    idx = x * M + y
-    visited[idx // 32] |= (1 << (idx % 32))
-
-def is_visited(x, y):
-    idx = x * M + y
-    return visited[idx // 32] & (1 << (idx % 32))
-
-def bfs():
-    queue = deque([(0, 0, 1)])
-    set_visited(0, 0)
+    # 1D 배열로 플래튼 변환
+    visited = [False] * (N * M)
+    
+    # BFS 큐 초기화
+    queue = deque([(0, 0, 1)])  # (x, y, 현재 이동 거리)
+    visited[0] = True  # 시작점 방문 처리
 
     while queue:
         x, y, dist = queue.popleft()
-        if x == N - 1 and y == M - 1:
-            print(dist)
-            return
-        for dx, dy in [(1,0), (-1,0), (0,1), (0,-1)]:
-            nx, ny = x + dx, y + dy
+        
+        # 목표 지점 도착 시 종료
+        if x == N-1 and y == M-1:
+            return dist
+
+        # 네 방향 탐색
+        for i in range(4):
+            nx, ny = x + dx[i], y + dy[i]
+
             if 0 <= nx < N and 0 <= ny < M:
-                if maze[nx][ny] == 1 and not is_visited(nx, ny):
-                    set_visited(nx, ny)
+                idx = nx * M + ny  # 1D 인덱스 변환
+                
+                if maze[nx][ny] == 1 and not visited[idx]:  # 이동 가능 & 방문 안 했으면
+                    visited[idx] = True  # 방문 처리
                     queue.append((nx, ny, dist + 1))
 
-bfs()
+    return -1  # 도달 불가능 (문제 조건상 없지만 안전장치)
+
+# 입력 처리
+N, M = map(int, sys.stdin.readline().split())
+maze = [list(map(int, list(sys.stdin.readline().strip()))) for _ in range(N)]
+
+# 결과 출력
+print(min_steps_in_maze(N, M, maze))
