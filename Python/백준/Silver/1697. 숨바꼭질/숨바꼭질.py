@@ -1,9 +1,6 @@
-import sys
 from collections import deque
-input = sys.stdin.readline
-
 N, K = map(int, input().split())
-size = max(100000, max(N, K)*2) + 1
+size = 100001
 visited = [False] * size
 queue = deque([(N, 0)])
 visited[N] = True 
@@ -18,6 +15,3 @@ while queue :
             queue.append((next, elapse+1))
             visited[next] = True
         
-
-
-
