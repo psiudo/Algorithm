@@ -13,8 +13,11 @@ while queue :
     if cur == K :
             print(elapse)
             break
-    for next in [2*cur, cur+1, cur-1] :
+    for next in [cur+1, cur-1, 2*cur] :
         if 0 <= next <= size-1 and not visited[next] :
             queue.append((next, elapse+1))
             visited[next] = True
         
+
+
+
