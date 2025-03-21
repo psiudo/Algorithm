@@ -1,40 +1,42 @@
-import sys  # bfs
-from collections import deque
-input = sys.stdin.readline
-m, n, h = map(int,input().split()) #n=행 m=열
-dy,dx, dz=[-1,1,0,0,0,0],[0,0,-1,1,0,0],[0,0,0,0,-1,1] #상하좌우 이동
-graph = []
+import sys
 
-for j in range(h):
-    pan= []
-    for i in range(n):
-        pan.append(list(map(int,input().split()))) #int 반복문 사용시 append를 사용
-    graph.append(pan) #subscriptable을 해결하기 위해 입력을 따로 받기
+input = sys.stdin.readline
+from collections import deque
+
+M, N, H = map(int, input().split())
+ware = [[list(map(int, input().split())) for _ in range(N)] for _ in range(H)]
 
 def bfs() :
-    q = deque()
-    for a in range(h):
-        for b in range(n):
-            for c in range(m):
-                if graph[a][b][c] == 1 : #1인 값들 전부를 q에 넣기
-                    q.append((a,b,c))
-    while q:
-        z, y, x = q.popleft()
-        for i in range(6):
-            nx, ny , nz= x +dx[i] , y + dy[i], z + dz[i]
-            if nx < 0 or nx >= m or ny < 0 or ny >= n or nz < 0 or nz >= h:
-                continue
-            elif graph[nz][ny][nx]==0:
-                graph[nz][ny][nx] = graph[z][y][x]+ 1 #기존 토마토값에 +1
-                q.append((nz,ny,nx)) #q에 이동한 토마토 위치 넣어줌
+    dq = deque()
 
-bfs() #bfs 호출 graph에 각 값 넣기
-ans = 0
-for i in graph:
-    for j in i:
-        for tomato in j:
-            if tomato == 0: #그래프안에 0이 있다면 -1출력후 종료
-                print(-1)
-                exit(0)
-        ans = max(ans, max(j))
-print(ans -1 ) #처음 시작이 1이기때문에 -1 
+    for z in range(H):
+        for y in range(N):
+            for x in range(M):
+                if ware[z][y][x] == 1:
+                    dq.append((z, y, x, 0))
+
+    day = 0
+    while dq:
+        z, y, x, day = dq.popleft()
+        for dx, dy, dz in [(1, 0, 0), (0, 1, 0), (-1, 0, 0), (0, -1, 0), (0, 0, 1), (0, 0, -1)]:
+            nx, ny, nz = x + dx, y + dy, z + dz
+            if nx < 0 or nx >= M or ny < 0 or ny >= N or nz < 0 or nz >= H:
+                continue
+            elif ware[nz][ny][nx] == 0:
+                dq.append((nz, ny, nx, day+1))
+                ware[nz][ny][nx] = 1
+    return day
+
+day = bfs()
+
+found_zero = False
+for height in ware:
+    for row in height:
+        if 0 in row:
+            print(-1)
+            found_zero = True
+            break
+    if found_zero:
+        break
+else:
+    print(day)
