@@ -1,30 +1,44 @@
 import sys
+input = sys.stdin.readline
 from collections import deque
 
-input = sys.stdin.readline
-N, M = map(int, input().split())
-matrix_map = [list(map(int, list(input().strip()))) for _ in range(N)]
 
-visited = [[[False, False] for _ in range(M)] for _ in range(N)]
+def bfs_2layer_wall_break(grid):
+    N, M = len(grid), len(grid[0])
 
-def crash_bfs():
-    q = deque([(0, 0, 1, 0)])
-    visited[0][0][0] = True
-    
-    while q:
-        x, y, steps, crashed = q.popleft()
+    # 2개의 레이어: 아직 벽 안 부숨, 이미 부숨
+    visited_no_break = [[False] * M for _ in range(N)]
+    visited_break = [[False] * M for _ in range(N)]
+
+    queue = deque()
+    queue.append((0, 0, 0, 1))  # (x, y, w, dist) w=0이면 아직 벽 안 부숨
+    visited_no_break[0][0] = True
+
+    while queue:
+        x, y, w, dist = queue.popleft()
+
         if x == N - 1 and y == M - 1:
-            return steps
-        
+            return dist
+
         for dx, dy in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
             nx, ny = x + dx, y + dy
             if 0 <= nx < N and 0 <= ny < M:
-                if matrix_map[nx][ny] == 0 and not visited[nx][ny][crashed]:
-                    visited[nx][ny][crashed] = True
-                    q.append((nx, ny, steps + 1, crashed))
-                elif matrix_map[nx][ny] == 1 and crashed == 0 and not visited[nx][ny][1]:
-                    visited[nx][ny][1] = True
-                    q.append((nx, ny, steps + 1, 1))
+                if grid[nx][ny] == 0:
+                    # 길(0) → w 상태 그대로
+                    if w == 0 and not visited_no_break[nx][ny]:
+                        visited_no_break[nx][ny] = True
+                        queue.append((nx, ny, 0, dist + 1))
+                    elif w == 1 and not visited_break[nx][ny]:
+                        visited_break[nx][ny] = True
+                        queue.append((nx, ny, 1, dist + 1))
+                else:
+                    # 벽(1)이고, 아직 벽 안 부쉈을 때만 가능
+                    if w == 0 and not visited_break[nx][ny]:
+                        visited_break[nx][ny] = True
+                        queue.append((nx, ny, 1, dist + 1))
+
     return -1
 
-print(crash_bfs())
+N, M = map(int, input().split())
+grid = [list(map(int, list(input().strip()))) for _ in range(N)]
+print(bfs_2layer_wall_break(grid))
