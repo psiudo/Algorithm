@@ -1,7 +1,3 @@
-
-import sys
-input = sys.stdin.readline
-
 def dfs(x, y):
     stack = [(x, y)]
 
@@ -13,7 +9,8 @@ def dfs(x, y):
             if 0<= nx < N and 0 <= ny < M and visited[nx][ny] == 0 and farm[nx][ny] == 1:
                 stack.append((nx, ny))
                 visited[nx][ny] = 1
-                
+
+
 T = int(input())
 
 for ts in range(1, T + 1):
