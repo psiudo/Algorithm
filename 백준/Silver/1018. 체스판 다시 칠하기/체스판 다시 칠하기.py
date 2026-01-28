@@ -1,61 +1,26 @@
 ######################################
 N, M = map(int, input().split())
-
-grid = [[]*M for _ in range(N)]
-for row in range(N) :
+grid = []
+for _ in range(N):
     st = input()
-    for s in st :
-        if s == "B" :
-            grid[row].append(1)
-        else :
-            grid[row].append(0)
-
+    row = []
+    for ch in st:
+        row.append(int(ch == 'B'))
+    grid.append(row)
 ######################################
 ########################## 검은색이 1 ############################
-check1 = [] # 흰색시작
-for i in range(M) :
-    if i % 2 == 1 :
-        check1.append(1)
-    else :
-        check1.append(0)
-check2 = [] #검은색시작
-for i in range(M) :
-    if i % 2 == 1 :
-        check2.append(0)
-    else :
-        check2.append(1)
-#######################################
-ans = []
+check1 = [1 if i % 2 else 0 for i in range(M)]
+check2 = [0 if i % 2 else 1 for i in range(M)]
+
+ans = 64
 for x in range(N+1-8) :
     for y in range(M+1-8) :
-        cnt1 = 0
-        cnt2 = 0
-        for i in range(8) :
-            for j in range(8) :
-                if i%2 == 0 :
-                    if grid[x+i][y+j] != check2[j] :
-                        cnt1 += 1
-                    else :
-                        cnt2 += 1
-                else :
-                    if grid[x+i][y+j] != check1[j] :
-                        cnt1 += 1
-                    else :
-                        cnt2 += 1
-        cnt3 = 0
-        cnt4 = 0
-        for i in range(8) :
-            for j in range(8) :
-                if i%2 == 0 :
-                    if grid[x+i][y+j] != check1[j] :
-                        cnt3 += 1
-                    else :
-                        cnt4 += 1
-                else :
-                    if grid[x+i][y+j] != check2[j] :
-                        cnt3 += 1
-                    else :
-                        cnt4 += 1
-        ans.append(min(cnt1, cnt2, cnt3, cnt4))
+        cntB = 0
+        for i in range(8):
+            row = grid[x+i][y:y+8]
+            pattern = check2[y:y+8] if i % 2 == 0 else check1[y:y+8]
+            cntB += sum(a ^ b for a, b in zip(row, pattern))
 
-print(min(ans))
+        ans = min(ans, cntB, 64 - cntB)
+
+print(ans)
