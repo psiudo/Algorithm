@@ -1,31 +1,40 @@
-def dfs_stack(x, y):
-    stack = [(x, y)]
-    count = 0
+N = int(input())
+grid = [list(map(int, input())) for _ in range(N)]
+#######################################
+dv = [(0, 1), (1, 0), (-1, 0), (0, -1)]
 
-    while stack:
-        x, y = stack.pop()
-        if grid[x][y] == 0:
+def bfs(x, y) :
+    q = [(x, y)]
+    cnt = 0
+
+    while q :
+        x, y = q.pop(0)
+
+        # 방문여부
+        if grid[x][y] == 0 :
             continue
 
+        # 단지 수 추가 및 방문
+        cnt += 1
         grid[x][y] = 0
-        count += 1
 
-        for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+        for dx, dy in dv :
             nx, ny = x + dx, y + dy
-            if 0 <= nx < N and 0 <= ny < N and grid[nx][ny] == 1:
-                stack.append((nx, ny))
+            if 0 <= nx <= N-1 and 0 <= ny <= N-1 and grid[nx][ny] != 0 :
+                q.append((nx, ny))
 
-    return count
+    return cnt
 
-N = int(input())
-grid = [list(map(int, input().strip())) for _ in range(N)]
-result = []
 
-for i in range(N):
-    for j in range(N):
-        if grid[i][j] == 1:
-            result.append(dfs_stack(i, j))
+#######################################
+results = []
+for x in range(N) :
+    for y in range(N) :
+        if grid[x][y] == 1 :
+            results.append(bfs(x, y))
 
-print(len(result))
-for count in sorted(result):
-    print(count)
+
+#######################################
+print(len(results))
+for result in sorted(results) :
+    print(result)
