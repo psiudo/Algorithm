@@ -4,12 +4,6 @@
 """
 A, B = map(int, input().split())
 #####################################
-def two_multiply(x) :
-    return 2*x
-def add_one(x) :
-    return int(str(x) + '1')
-#####################################
-v = set()
 def search(raw, target) :
     q = [(raw, 1)]
     while q :
@@ -19,14 +13,12 @@ def search(raw, target) :
         # 넘었다면
         if x > target :
             continue
-        a, b = two_multiply(x), add_one(x)
-        # 다음 후보들 역시 방문하지 않았다면
-        if a not in v :
+        a, b = 2*x, 10*x + 1
+        # 타겟보다 작으면 넣기
+        if a <= target :
             q.append((a, cnt+1))
-            v.add(a)
-        if b not in v :
+        if b <= target :
             q.append((b, cnt+1))
-            v.add(b)
 
     return -1
 
