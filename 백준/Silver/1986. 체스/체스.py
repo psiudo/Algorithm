@@ -32,7 +32,7 @@ v = [[0]*m for _ in range(n)]
 dv = [(2,1), (2,-1), (-2,1), (-2,-1), (1,2), (1,-2), (-1,2), (-1,-2)]
 for x, y in knight :
     for dx, dy in dv :
-        nx, ny = x - 1 + dx, y - 1 + dy ############# -1 임시방편
+        nx, ny = x - 1 + dx, y - 1 + dy
         if 0 <= nx <= n - 1 and 0 <= ny <= m - 1 : # 있든 없든 마킹 가능
             v[nx][ny] = 1
 
@@ -40,17 +40,11 @@ dv = [(1,0),(0,1),(-1,0),(0,-1),(1,1),(-1,-1),(1,-1),(-1,1)]
 for x, y in queen :
     for dx, dy in dv :
         # 한 방향 탐색
-        for k in range(1, max(m, n)) : ################### 0부터 들어가면!!! 바로 중지됨!!!!!!!!!!
-            nx, ny = x - 1 + k*dx, y - 1 + k*dy
-            # 다른 말이 없으며 범위 내에 있을 때, 방문 여부 상관 x
-            if 0 <= nx <= n - 1 and 0 <= ny <= m - 1 and grid[nx][ny] == 0 :
-                v[nx][ny] = 1 # 방문할 수 있음만 마킹
-            else : # 막히거나 범위 밖이면
-                break # 이 방향 탐색 중지
-
-
-
-
+        nx, ny = x - 1 + dx, y - 1 + dy
+        while 0 <= nx <= n - 1 and 0 <= ny <= m - 1 and grid[nx][ny] == 0 :
+            v[nx][ny] = 1 # 방문할 수 있음만 마킹
+            nx += dx
+            ny += dy
 
 ##############################################
 cnt = 0
