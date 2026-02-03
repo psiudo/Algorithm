@@ -1,22 +1,15 @@
-import sys
 N, M = map(int, input().split())
-result = [] 
 
-all_mask = (1 << N) - 1 # 0번 ~ (N-1)번 비트가 켜진 마스크
-
-def solve(depth, visited_mask):
-    if depth == M:
-        print(*result)
+path = [] # 상태공간트리의 선택된 원소를 선택된 순서대로 저장하는 리스트
+def dfs(depth) : # 아직 아무 선택하지 않았으면 depth = 0 , depth = 1은 첫번째 선택
+    if len(path) == M :
+        print(*path)
         return
 
-    available = all_mask & ~visited_mask
+    for i in range(1, N+1) :
+        if i not in path : # path에 중복된 수가 있으면 안되기에
+            path.append(i) # 경로에 들어가고
+            dfs(depth+1) # 다음 선택으로
+            path.pop()
 
-    while available:
-        pos = available & -available 
-        available -= pos
-        i = pos.bit_length()
-        result.append(i)
-        solve(depth + 1, visited_mask | pos)
-        result.pop() 
-
-solve(0, 0)
+dfs(0)
