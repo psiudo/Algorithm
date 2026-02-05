@@ -12,4 +12,3 @@ for i in range(1, N):
 
 for num in arr:
     print(num)
-        
