@@ -1,21 +1,27 @@
-import sys
-input = sys.stdin.readline
-output = sys.stdout.write
 
 N = int(input())
-sangeun = {} 
-for num in map(int, input().split()):
-    sangeun[num] = 1 
-
+num_cards = sorted(list(map(int, input().split()))) # 정렬 필수!!!
 M = int(input())
-num_card = map(int, input().split())
+candis = list(map(int, input().split()))
+length = len(num_cards) - 1
+def binary_s(candi) :
+    l, m, r = 0, ( 0 + length )//2, length
+    while l <= r :
+        m = (l+r)//2
+        # 찾았다면
+        if num_cards[m] == candi :
+            return 1
+        # 오른쪽에 있다면
+        if num_cards[m] < candi :
+            l = m + 1
+        # 왼쪽에 있다면
+        else :
+            r = m - 1
+    return 0
 
 
-result = []
-for num in num_card:
-    if num in sangeun:
-        result.append("1")
-    else:
-        result.append("0")
+ans = []
+for candi in candis :
+    ans.extend([binary_s(candi)])
 
-output(" ".join(result) + "\n")
+print(*ans)
