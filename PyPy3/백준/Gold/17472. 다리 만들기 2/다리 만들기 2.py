@@ -3,12 +3,9 @@ from collections import deque
 d_to_chr = {0: '-', 1: '|', 2: '|', 3: '-'}
 dx = [0, 1, -1, 0]
 dy = [1, 0, 0, -1]
-
-
 # ===========================================================================
 def inb(p, q):
     return 0 <= p <= N - 1 and 0 <= q <= M - 1
-
 
 def collect_node(x, y):
     q = deque([(x, y)])
@@ -25,7 +22,6 @@ def collect_node(x, y):
             v[nx][ny] = 1
             node.append((nx, ny))
     return node
-
 
 def connect_bridge(x, y, d, node):
     node_set = set(node)
@@ -50,7 +46,6 @@ def connect_bridge(x, y, d, node):
             grid[x][y] = bridge
     return length, path
 
-
 def revert_bridge(path):
     for x, y in path:
         if len(str(grid[x][y])) == 1:
@@ -58,15 +53,11 @@ def revert_bridge(path):
         else:
             grid[x][y] = str(grid[x][y])[:-1]
 
-
 opp = [3, 2, 1, 0]
-
-
 def can_go(cell, d):
     if cell == 0: return False
     if type(cell) == int: return True
     return ('-' in cell and d in (0, 3)) or ('|' in cell and d in (1, 2))
-
 
 def check_connect():
     start_x, start_y = Node[0][0]
@@ -81,14 +72,12 @@ def check_connect():
             nx, ny = x + dx[d], y + dy[d]
             if not inb(nx, ny): continue
 
-            # 핵심: 다리 위에서는 오직 직진만 허용! (환승 원천 차단)
             if b_dir == 0 and d not in (0, 3): continue
             if b_dir == 1 and d not in (1, 2): continue
 
             if not can_go(grid[x][y], d): continue
             if not can_go(grid[nx][ny], opp[d]): continue
 
-            # 다음 칸의 상태 결정
             nxt_val = grid[nx][ny]
             nxt_b_dir = -1
             if type(nxt_val) == str:
@@ -107,8 +96,6 @@ def check_connect():
         if set(node) - visited_islands:
             return False
     return True
-
-
 # ===========================================================================
 N, M = map(int, input().split())
 grid = [list(map(int, input().split())) for _ in range(N)]
@@ -147,16 +134,10 @@ for i in range(len(Node)):
 all_bridges.sort(key=lambda x: x[2])
 # ===========================================================================
 need = len(Node) - 1
-
-
 def dfs(depth, picked, curr_length):
     global ans
 
     if curr_length >= ans: return
-
-    if picked + (len(all_bridges) - depth) < need: return
-
-    if picked > need: return
 
     if picked == need:
         if check_connect():
@@ -176,8 +157,6 @@ def dfs(depth, picked, curr_length):
     dfs(depth + 1, picked + 1, curr_length + length)
     revert_bridge(path)
     dfs(depth + 1, picked, curr_length)
-
-
 # ===========================================================================
 ans = 10 ** 6
 dfs(0, 0, 0)
